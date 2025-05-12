@@ -50,8 +50,7 @@ const customBaseQuery = async (
       return { data: null };
     }
     return result;
-  } 
-  catch (error: unknown) {
+  } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";
 
@@ -93,8 +92,25 @@ export const api = createApi({
       query: (id) => `courses/${id}`,
       providesTags: (result, error, id) => [{ type: "Courses", id }],
     }),
+
+    //Transactions
+    createStripePaymentIntent: build.mutation<
+      { clientSecret: string },
+      { amount: number }>({
+      query: ({ amount }) => ({
+        url: `transactions/stripe/payment-intent`,
+        method: "POST",
+        body: { amount },
+      }),
+    }),
+
+
   }),
 });
 
-export const { useGetCoursesQuery, useGetCourseQuery, useUpdateUserMutation } =
-  api;
+export const {
+  useGetCoursesQuery,
+  useGetCourseQuery,
+  useUpdateUserMutation,
+  useCreateStripePaymentIntentMutation,
+} = api;

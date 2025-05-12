@@ -9,6 +9,7 @@ export const useCheckoutNavigation = () => {
   const searchParams = useSearchParams();
   const { isLoaded, isSignedIn } = useUser();
 
+
   const courseId = searchParams.get("id") ?? "";
   const checkoutStep = parseInt(searchParams.get("step") ?? "1", 10);
 
@@ -27,6 +28,7 @@ export const useCheckoutNavigation = () => {
     [courseId, isSignedIn, router]
   );
 
+  // this step is just to naviagte to step 1.
   useEffect(() => {
     if (isLoaded && !isSignedIn && checkoutStep > 1) {
       navigateToStep(1);
