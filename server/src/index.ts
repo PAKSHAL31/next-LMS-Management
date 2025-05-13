@@ -25,7 +25,6 @@ export const clerkClient = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY,
 });
 
-
 const app = express();
 app.use(express.json());
 app.use(helmet());
@@ -34,19 +33,20 @@ app.use(morgan("common"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
-app.use(clerkMiddleware())
+app.use(clerkMiddleware());
 
 app.get("/", (req, res) => {
-    res.send("Hello World");
-  });
+  res.send("Hello World");
+});
 
-  app.use("/courses", courseRoutes);
-app.use("/users/clerk", requireAuth(), userClerkRoutes); //requireAuth is for validating the user
+app.use("/courses", courseRoutes);
+app.use("/users/clerk", requireAuth(), userClerkRoutes);//requireAuth is for validating the user
 app.use("/transactions", requireAuth(), transactionRoutes);
-  const port = process.env.PORT || 3000;
-  if (!isProduction) {
-    app.listen(port, () => {
-      console.log(`Server running on port ${port}`);
-    });
-  }
-  
+
+
+const port = process.env.PORT || 3000;
+if (!isProduction) {
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}

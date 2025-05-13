@@ -1,18 +1,17 @@
-"use client"
+"use client";
 
-import { SignIn, useUser } from '@clerk/nextjs'
-import React from 'react'
+import { SignIn, useUser } from "@clerk/nextjs";
+import React from "react";
 import { dark } from "@clerk/themes";
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from "next/navigation";
 
-//to change the css of a particular element. use elements and the class name
 const SignInComponent = () => {
-    const { user } = useUser();
+  const { user } = useUser();
   const searchParams = useSearchParams();
   const isCheckoutPage = searchParams.get("showSignUp") !== null;
   const courseId = searchParams.get("id");
 
-   const signUpUrl = isCheckoutPage
+  const signUpUrl = isCheckoutPage
     ? `/checkout?step=1&id=${courseId}&showSignUp=true`
     : "/signup";
 
@@ -28,8 +27,8 @@ const SignInComponent = () => {
     return "/user/courses";
   };
 
-
-  return  <SignIn
+  return (
+    <SignIn
       appearance={{
         baseTheme: dark,
         elements: {
@@ -49,12 +48,13 @@ const SignInComponent = () => {
           formFieldInput: "bg-customgreys-primarybg text-white-50 !shadow-none",
           footerActionLink: "text-primary-750 hover:text-primary-600",
         },
-      }} 
-     signUpUrl={signUpUrl}
+      }}
+      signUpUrl={signUpUrl}
       forceRedirectUrl={getRedirectUrl()}
       routing="hash"
       afterSignOutUrl="/"
-      />
-}
+    />
+  );
+};
 
-export default SignInComponent
+export default SignInComponent;

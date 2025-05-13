@@ -63,6 +63,7 @@ const customBaseQuery = async (
   2. Partial<data> - means sending only some properties and not all.
 */
 
+// query attribute is always what we pass to the backend server.
 export const api = createApi({
   baseQuery: customBaseQuery,
   reducerPath: "api",
@@ -77,6 +78,12 @@ export const api = createApi({
       }),
       invalidatesTags: ["Users"],
     }),
+
+    /* 
+    ===============
+    COURSES
+    =============== 
+    */
 
     //get all coruses
     getCourses: build.query<Course[], { category?: string }>({
@@ -93,10 +100,49 @@ export const api = createApi({
       providesTags: (result, error, id) => [{ type: "Courses", id }],
     }),
 
+    createCourse: build.mutation<
+      Course,
+      { teacherId: string; teacherName: string }
+    >({
+      query: (body) => ({
+        url: `courses`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Courses"],
+    }),
+
+    updateCourse: build.mutation<
+      Course,
+      { courseId: string; formData: FormData }
+    >({
+      query: ({ courseId, formData }) => ({
+        url: `courses/${courseId}`,
+        method: "PUT",
+        body: formData,
+      }),
+      invalidatesTags: (result, error, { courseId }) => [
+        { type: "Courses", id: courseId },
+      ],
+    }),
+
+    deleteCourse: build.mutation<{ message: string }, string>({
+      query: (courseId) => ({
+        url: `courses/${courseId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Courses"],
+    }),
+
     //Transactions
+    getTransactions: build.query<Transaction[], string>({
+      query: (userId) => `transactions?userId=${userId}`,
+    }),
+
     createStripePaymentIntent: build.mutation<
       { clientSecret: string },
-      { amount: number }>({
+      { amount: number }
+    >({
       query: ({ amount }) => ({
         url: `transactions/stripe/payment-intent`,
         method: "POST",
@@ -104,13 +150,24 @@ export const api = createApi({
       }),
     }),
 
-
+    createTransaction: build.mutation<Transaction, Partial<Transaction>>({
+      query: (transaction) => ({
+        url: "transactions",
+        method: "POST",
+        body: transaction,
+      }),
+    }),
   }),
 });
 
 export const {
   useGetCoursesQuery,
   useGetCourseQuery,
+  useCreateCourseMutation,
+  useDeleteCourseMutation,
+  useUpdateCourseMutation,
   useUpdateUserMutation,
+  useGetTransactionsQuery,
   useCreateStripePaymentIntentMutation,
+  useCreateTransactionMutation,
 } = api;

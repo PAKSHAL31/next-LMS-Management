@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useGetCoursesQuery } from "@/state/api";
 import CourseCardSearch from "@/components/CourseCardSearch";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 
 const LoadingSkeleton =() => {
     return(
@@ -46,6 +47,10 @@ const LoadingSkeleton =() => {
 // courses would come undeefined intially because the code runs twice once on server and the other on client. 
 // server can't fetch data so it return undefined.
 const Landing = () => {
+  const {user} = useUser();
+   const userType = user?.publicMetadata?.userType as string
+   console.log(userType)
+
   const router = useRouter();
     const currentImage = useCarousel({ totalImages: 3 });
     const { data: courses, isLoading, isError } = useGetCoursesQuery({});
