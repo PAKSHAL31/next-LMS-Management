@@ -57,6 +57,7 @@ export const globalSlice = createSlice({
     },
 
     addSection: (state, action: PayloadAction<Section>) => {
+      console.log(action.payload)
       state.courseEditor.sections.push(action.payload);
     },
     editSection: (

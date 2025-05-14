@@ -9,10 +9,12 @@ export default clerkMiddleware(async (auth, req) => {
   //console.log("Headers ",req.headers);
   const { sessionClaims } = await auth();
   const userId = sessionClaims?.sub || "";
-  const user = await clerkClient.users.getUser(userId);
-
-  const userRole = user.publicMetadata?.userType || "student";
-
+  var user, userRole;
+  if(isStudentRoute(req) || isTeacherRoute(req)){
+    user = await clerkClient.users.getUser(userId);
+    userRole = user.publicMetadata?.userType || "student";
+  }
+  
   if (isStudentRoute(req)) {
     if (userRole !== "student") {
       const url = new URL("/teacher/courses", req.url);
