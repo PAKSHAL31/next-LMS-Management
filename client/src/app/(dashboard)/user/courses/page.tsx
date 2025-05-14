@@ -36,6 +36,7 @@ const Courses = () => {
     });
   }, [courses, searchTerm, selectedCategory]);
 
+  // open the courses/courseid/chapters/chapter id of first section of that course.
   const handleGoToCourse = (course: Course) => {
     if (
       course.sections &&

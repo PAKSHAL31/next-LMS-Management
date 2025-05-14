@@ -312,16 +312,17 @@ export const createCourseFormData = (
   return formData;
 };
 
+//get upload video url comes from backend. 
 export const uploadAllVideos = async (
   localSections: Section[],
   courseId: string,
   getUploadVideoUrl: any
 ) => {
   const updatedSections = localSections.map((section) => ({
-    ...section,
+    ...section, // making a shallow copy
     chapters: section.chapters.map((chapter) => ({
-      ...chapter,
-    })),
+      ...chapter, // making a shallow copy because it is a nested obj in a obj.
+    })), 
   }));
 
   for (let i = 0; i < updatedSections.length; i++) {
@@ -357,6 +358,7 @@ async function uploadVideo(
 ) {
   const file = chapter.video as File;
 
+  //get upload url is a fucnton ap call to upload the videoin amazon s3 bucket. // upload url is aws so we to fetch.
   try {
     const { uploadUrl, videoUrl } = await getUploadVideoUrl({
       courseId,

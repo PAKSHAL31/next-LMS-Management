@@ -11,7 +11,7 @@ import {
   uploadAllVideos,
 } from "@/lib/utils";
 import { openSectionModal, setSections } from "@/state";
-import { useGetCourseQuery, useUpdateCourseMutation } from "@/state/api";
+import { useGetCourseQuery, useUpdateCourseMutation, useGetUploadVideoUrlMutation } from "@/state/api";
 import { useAppDispatch, useAppSelector } from "@/state/redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Plus } from "lucide-react";
@@ -19,7 +19,7 @@ import { useParams, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import DroppableComponent from "./Droppable";
-import ChapterModal from "./ChapterModal";
+import ChapterModal from "./ChapterModal";``
 import SectionModal from "./SectionModal";
 import { useDispatch } from "react-redux";
 
@@ -31,7 +31,7 @@ const CourseEditor = () => {
   //we get course data info from backend.
   const { data: course, isLoading, refetch } = useGetCourseQuery(id);
   const [updateCourse] = useUpdateCourseMutation();
-  //   const [getUploadVideoUrl] = useGetUploadVideoUrlMutation();
+  const [getUploadVideoUrl] = useGetUploadVideoUrlMutation();
 
   /// this is so that we dont have to pass the section from the course page.
   // We can directly access the values of section from the redux store.
@@ -64,16 +64,21 @@ const CourseEditor = () => {
   }, [course, methods]);
 
   const onSubmit = async (data: CourseFormData) => {
-    try {
-      const formData = createCourseFormData(data, sections); //creating the course form (key-value pair) // to get up-to-date info from database
+     try {
+      const updatedSections = await uploadAllVideos(
+        sections,
+        id,
+        getUploadVideoUrl
+      );
 
-      // we had created the course before, now we update it.
-      const updatedCourse = await updateCourse({
+      const formData = createCourseFormData(data, updatedSections);
+
+      await updateCourse({
         courseId: id,
         formData,
       }).unwrap();
 
-      refetch(); // to get up-to-date info from database
+      refetch();
     } catch (error) {
       console.error("Failed to update course:", error);
     }
