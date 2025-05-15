@@ -17,7 +17,7 @@ const customBaseQuery = async (
         console.log("Token - ",token);
         headers.set("Authorization", `Bearer ${token}`);
       }
-      console.log(headers)
+      headers.set("Content-Type", "application/json");
       return headers;
     },
   });
