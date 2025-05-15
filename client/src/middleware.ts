@@ -8,6 +8,8 @@ const isTeacherRoute = createRouteMatcher(["/teacher/(.*)"]);
 export default clerkMiddleware(async (auth, req) => {
   //console.log("Headers ",req.headers);
   const { sessionClaims } = await auth();
+  
+
   const userId = sessionClaims?.sub || "";
   var user, userRole;
   if(isStudentRoute(req) || isTeacherRoute(req)){

@@ -14,8 +14,10 @@ const customBaseQuery = async (
     prepareHeaders: async (headers) => {
       const token = await window.Clerk?.session?.getToken();
       if (token) {
+        console.log("Token - ",token);
         headers.set("Authorization", `Bearer ${token}`);
       }
+      console.log(headers)
       return headers;
     },
   });
@@ -257,6 +259,10 @@ export const {
   useUpdateUserCourseProgressMutation,
   useGetUploadVideoUrlMutation
 } = api;
+
+
+
+
 
 
 

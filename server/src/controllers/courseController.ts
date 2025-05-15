@@ -7,7 +7,6 @@ import AWS from "aws-sdk";
 const s3 = new AWS.S3();
 
 
-
 export const listCourses = async (
   req: Request,
   res: Response
@@ -44,6 +43,8 @@ export const createCourse = async (
   res: Response
 ): Promise<void> => {
   try {
+    console.log("Content-Type:", req.headers["content-type"]);
+    console.log("Body received:", req.body);
     const { teacherId, teacherName } = req.body;
 
     if (!teacherId || !teacherName) {
@@ -244,3 +245,5 @@ export const getUploadVideoUrl = async (
     res.status(500).json({ message: "Error generating upload URL", error });
   }
 };
+
+
